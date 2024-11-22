@@ -13,5 +13,5 @@ Thumbs.db
 *.log
 __pycache__/
 
-#Ignore pasta upload
-uploads/
+# Ignorar tudo na pasta uploads/
+uploads/*
