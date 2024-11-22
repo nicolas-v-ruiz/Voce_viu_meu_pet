@@ -1,0 +1,17 @@
+# Ignore arquivos de dependências locais e ambientes virtuais
+venv/
+.env
+
+# Ignore arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Ignore o banco de dados local
+*.db
+
+# Ignore logs e caches
+*.log
+__pycache__/
+
+#Ignore pasta upload
+uploads/
