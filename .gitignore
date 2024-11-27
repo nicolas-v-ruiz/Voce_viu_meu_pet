@@ -15,3 +15,5 @@ __pycache__/
 
 # Ignorar tudo na pasta uploads/
 uploads/*
+
+admin_interface/*

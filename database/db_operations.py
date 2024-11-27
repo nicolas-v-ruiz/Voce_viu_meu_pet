@@ -74,16 +74,33 @@ def debug_database():
         tables = cursor.fetchall()
         print(f"Tabelas no banco de dados: {tables}")
 
+def fetch_pending_pets(status):
+    """
+    Retorna os pets pendentes com base no 'statuspet' (Perdido ou Encontrado).
+    """
+    with connect() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM cadastropet
+            WHERE statuspet = ? AND aprovado = 0
+        """, (status,))
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 def approve_pet(pet_id):
     with connect() as conn:
         cursor = conn.cursor()
         cursor.execute("UPDATE cadastropet SET aprovado = 1 WHERE rowid = ?", (pet_id,))
+        conn.commit()  # Certifique-se de que a transação seja salva
 
+# Função para rejeitar um pet (deletando o pet do banco de dados)
 def reject_pet(pet_id):
     with connect() as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM cadastropet WHERE rowid = ?", (pet_id,))
+        conn.commit()  # Certifique-se de que a transação seja salva
+
+
         
 # def fetch_approved_pets(status):
 #     """
