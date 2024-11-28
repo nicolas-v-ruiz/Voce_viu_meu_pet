@@ -17,3 +17,5 @@ __pycache__/
 uploads/*
 
 admin_interface/*
+
+db_operations.py

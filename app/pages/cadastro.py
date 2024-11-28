@@ -34,8 +34,8 @@ def app():
             try:
                 # Processa a imagem e salva no diretório absoluto
                 image_name = process_image(imagem, {"nomepet": nome_pet, "datapet": str(data)})
-                
-                # Mostra sucesso do processamento
+
+                # Mostra sucesso do processamento da imagem
                 st.success(f"Imagem processada com sucesso. Nome do arquivo: {image_name}")
 
                 # Dados para inserção no banco
@@ -51,7 +51,7 @@ def app():
                     "localizacaopet": localizacao,
                     "datapet": str(data),
                     "infoadicionalpet": info_adicional,
-                    "imagempet": image_name  # Salva o nome do arquivo, com extensão
+                    "imagempet": image_name  # Salva o nome do arquivo no banco
                 }
 
                 # Insere os dados no banco
@@ -64,11 +64,22 @@ def app():
             except RuntimeError as e:
                 st.error(f"Erro ao processar a imagem: {e}")
 
+
+
+# import streamlit as st
+# from pathlib import Path
+# from database.db_operations import create_table, insert_pet, update_table_schema
+# from helpers.image_processing import process_image
+
+# # Configura o diretório absoluto para uploads
+# UPLOADS_DIR = Path("C:/Users/FN84/OneDrive - PETROBRAS/Área de Trabalho/VoceViumeuPet - CRUD/projeto/uploads")
+# UPLOADS_DIR.mkdir(parents=True, exist_ok=True)  # Garante que o diretório existe
+
 # def app():
-    
+#     # Garante a criação da tabela e atualização do esquema
 #     create_table()
 #     update_table_schema()
-    
+
 #     st.title("Cadastro de Pets")
 #     st.write("Preencha o formulário abaixo para cadastrar um pet perdido ou encontrado.")
 
@@ -89,11 +100,13 @@ def app():
 
 #         if enviar:
 #             try:
-#                 # Processa a imagem e retorna o caminho salvo
-#                 image_id = process_image(imagem, {"nomepet": nome_pet, "datapet": str(data)})
-#                 st.success(f"Imagem processada com sucesso. ID: {image_id}")
+#                 # Processa a imagem e salva no diretório absoluto
+#                 image_name = process_image(imagem, {"nomepet": nome_pet, "datapet": str(data)})
+                
+#                 # Mostra sucesso do processamento
+#                 st.success(f"Imagem processada com sucesso. Nome do arquivo: {image_name}")
 
-#                        # Insere no banco
+#                 # Dados para inserção no banco
 #                 pet_data = {
 #                     "nome": nome,
 #                     "telefone": telefone,
@@ -106,15 +119,16 @@ def app():
 #                     "localizacaopet": localizacao,
 #                     "datapet": str(data),
 #                     "infoadicionalpet": info_adicional,
-#                     "imagempet": image_id
-#                     }
-            
-#             # Insere os dados no banco
+#                     "imagempet": image_name  # Salva o nome do arquivo, com extensão
+#                 }
+
+#                 # Insere os dados no banco
 #                 insert_pet(pet_data)
 #                 st.success("Pet cadastrado com sucesso!")
-        
+
 #             except ValueError as e:
 #                 st.error(f"Erro de validação: {e}")
-        
+
 #             except RuntimeError as e:
 #                 st.error(f"Erro ao processar a imagem: {e}")
+

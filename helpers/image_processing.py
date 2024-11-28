@@ -1,3 +1,4 @@
+import psycopg
 from pathlib import Path
 from PIL import Image
 import re
@@ -5,6 +6,18 @@ import re
 # Configura o diretório absoluto para uploads
 UPLOADS_DIR = Path("C:/Users/FN84/OneDrive - PETROBRAS/Área de Trabalho/VoceViumeuPet - CRUD/projeto/uploads")
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)  # Garante que o diretório existe
+
+def connect():
+    # Conectar ao banco de dados PostgreSQL
+    conn = psycopg.connect(
+        dbname="petdatabase",
+        user="edb_admin",
+        password="Upandocoming92@",
+        host="localhost",
+        port="5432"
+    )
+    return conn
+
 
 def process_image(image_file, metadata, max_size=(800, 800)):
     """
@@ -64,112 +77,27 @@ def resize_image(image, max_size=(800, 800)):
     return image
 
 
-
-
-# def process_image(image_file, metadata, upload_dir="uploads", max_size=(800, 800)):
-
-#     if image_file is None or not hasattr(image_file, "read"):
-#         raise ValueError("Nenhuma imagem válida foi carregada.")
-#     if 'nomepet' not in metadata or 'datapet' not in metadata:
-#         raise ValueError("Metadados obrigatórios ausentes ('nomepet' ou 'datapet').")
-
-#     try:
-#         # Validar o formato da imagem
-#         validate_image_format(image_file)
-
-#         # Criar diretório base para salvar a imagem
-#         upload_path = Path(upload_dir)
-#         upload_path.mkdir(parents=True, exist_ok=True)
-
-#         # Gerar um identificador único para a imagem
-#         image_id = str(uuid.uuid4())  # Exemplo: '123e4567-e89b-12d3-a456-426614174000'
-#         file_name = f"{image_id}.png"  # Salva com o ID no nome do arquivo
-
-#         # Caminho completo no sistema de arquivos
-#         file_path = upload_path / file_name
-
-#         # Abrir, redimensionar e salvar a imagem
-#         image = Image.open(image_file)
-#         image = resize_image(image, max_size)
-#         image.save(file_path, format="PNG", optimize=True, quality=85)
-
-#         # Retornar apenas o identificador único
-#         return image_id
-
-#     except (OSError, ValueError, IOError) as e:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from pathlib import Path
-# from PIL import Image
-# import re
-# import uuid
-
-# def process_image(image_file, metadata, upload_dir="uploads", max_size=(800, 800)):
-
-#     if image_file is None or not hasattr(image_file, "read"):
-#         raise ValueError("Nenhuma imagem válida foi carregada.")
-#     if 'nomepet' not in metadata or 'datapet' not in metadata:
-#         raise ValueError("Metadados obrigatórios ausentes ('nomepet' ou 'datapet').")
-
-#     try:
-#         # Validar o formato da imagem
-#         validate_image_format(image_file)
-
-#         # Criar diretório base para salvar a imagem
-#         upload_path = Path(upload_dir)
-#         upload_path.mkdir(parents=True, exist_ok=True)
-
-#         # Gerar um identificador único para a imagem
-#         image_id = str(uuid.uuid4())  # Exemplo: '123e4567-e89b-12d3-a456-426614174000'
-#         file_name = f"{image_id}.png"  # Salva com o ID no nome do arquivo
-
-#         # Caminho completo no sistema de arquivos
-#         file_path = upload_path / file_name
-
-#         # Abrir, redimensionar e salvar a imagem
-#         image = Image.open(image_file)
-#         image = resize_image(image, max_size)
-#         image.save(file_path, format="PNG", optimize=True, quality=85)
-
-#         # Retornar apenas o identificador único
-#         return image_id
-
-#     except (OSError, ValueError, IOError) as e:
-#         raise RuntimeError(f"Erro ao processar a imagem: {e}")
-
-
-# def validate_image_format(image_file):
-#     valid_formats = ["JPEG", "PNG"]
-#     try:
-#         image_format = Image.open(image_file).format
-#         if image_format not in valid_formats:
-#             raise ValueError("Formato de arquivo inválido. Use JPEG ou PNG.")
-#     except Exception as e:
-#         raise ValueError(f"Erro ao validar formato da imagem: {e}")
-#     return True
-
-
-# def sanitize_filename(filename, max_length=255):
-#     sanitized = re.sub(r"[^a-zA-Z0-9_-]", "", filename.strip())
-#     if not sanitized:
-#         raise ValueError("Nome de arquivo inválido após sanitização.")
-#     return sanitized[:max_length]
-
-
-# def resize_image(image, max_size=(800, 800)):
-#     image.thumbnail(max_size)
-#     return image
+def save_pet_to_db(metadata, image_filename):
+    """
+    Salva as informações do pet, incluindo o nome do arquivo da imagem, no banco de dados.
+    """
+    with connect() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO cadastropet (nome, telefone, email, nomepet, statuspet, especiepet, racapet, corpet, localizacaopet, datapet, infoadicionalpet, imagempet)
+                VALUES (%(nome)s, %(telefone)s, %(email)s, %(nomepet)s, %(statuspet)s, %(especiepet)s, %(racapet)s, %(corpet)s, %(localizacaopet)s, %(datapet)s, %(infoadicionalpet)s, %(imagempet)s)
+            """, {
+                'nome': metadata.get('nome'),
+                'telefone': metadata.get('telefone'),
+                'email': metadata.get('email'),
+                'nomepet': metadata.get('nomepet'),
+                'statuspet': metadata.get('statuspet'),
+                'especiepet': metadata.get('especiepet'),
+                'racapet': metadata.get('racapet'),
+                'corpet': metadata.get('corpet'),
+                'localizacaopet': metadata.get('localizacaopet'),
+                'datapet': metadata.get('datapet'),
+                'infoadicionalpet': metadata.get('infoadicionalpet', ''),
+                'imagempet': image_filename  # Salva o nome do arquivo da imagem no banco
+            })
+            conn.commit()
