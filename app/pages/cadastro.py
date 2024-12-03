@@ -57,6 +57,8 @@ def app():
                 # Insere os dados no banco
                 insert_pet(pet_data)
                 st.success("Pet cadastrado com sucesso!")
+                
+                update_table_schema()
 
             except ValueError as e:
                 st.error(f"Erro de validação: {e}")

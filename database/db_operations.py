@@ -1,11 +1,13 @@
 import sqlite3
 import os
+
 def connect():
     # Caminho absoluto para o banco de dados na raiz do projeto
     db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../pet_database.db"))
     if not os.path.exists(db_path):
         raise FileNotFoundError(f"Banco de dados não encontrado no caminho: {db_path}")
     return sqlite3.connect(db_path)
+
 def create_table():
     with connect() as conn:
         cursor = conn.cursor()
@@ -24,6 +26,7 @@ def create_table():
                 infoadicionalpet TEXT,
                 imagempet TEXT)
         """)
+
 def update_table_schema():
     """
     Adiciona a coluna 'aprovado' à tabela 'cadastropet', se ela não existir.
@@ -37,6 +40,7 @@ def update_table_schema():
             # Caso a coluna já exista, o erro será ignorado
             if "duplicate column name: aprovado" not in str(e).lower():
                 raise e
+
 def insert_pet(data):
     with connect() as conn:
         cursor = conn.cursor()
@@ -44,6 +48,7 @@ def insert_pet(data):
             INSERT INTO cadastropet (nome, telefone, email, nomepet, statuspet, especiepet, racapet, corpet, localizacaopet, datapet, infoadicionalpet, imagempet)
             VALUES (:nome, :telefone, :email, :nomepet, :statuspet, :especiepet, :racapet, :corpet, :localizacaopet, :datapet, :infoadicionalpet, :imagempet)
         """, data)
+
 def fetch_approved_pets(status):
     """
     Retorna os pets aprovados com base no 'statuspet' (Perdido ou Encontrado).
