@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from database.db_operations import fetch_approved_pets, debug_database
+from database.db_operations import fetch_pets, debug_database
 
 UPLOADS_DIR = os.path.abspath("uploads")
 
@@ -13,7 +13,7 @@ def app():
 
     # Busca os pets perdidos aprovados
     try:
-        pets_perdidos = fetch_approved_pets("Perdido")
+        pets_perdidos = fetch_pets("Perdido")
     except Exception as e:
         st.error(f"Erro ao acessar o banco de dados: {e}")
         return
