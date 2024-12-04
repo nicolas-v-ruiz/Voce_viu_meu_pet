@@ -1,6 +1,6 @@
 import streamlit as st
 from pathlib import Path
-from database.db_operations import create_table, insert_pet, update_table_schema
+from database.db_operations import create_table, insert_pet
 from helpers.image_processing import process_image
 
 # Configura o diretório absoluto para uploads
@@ -10,7 +10,6 @@ UPLOADS_DIR.mkdir(parents=True, exist_ok=True)  # Garante que o diretório exist
 def app():
     # Garante a criação da tabela e atualização do esquema
     create_table()
-    update_table_schema()
 
     st.title("Cadastro de Pets")
     st.write("Preencha o formulário abaixo para cadastrar um pet perdido ou encontrado.")
@@ -57,6 +56,8 @@ def app():
                 # Insere os dados no banco
                 insert_pet(pet_data)
                 st.success("Pet cadastrado com sucesso!")
+                
+                # update_table_schema()
 
             except ValueError as e:
                 st.error(f"Erro de validação: {e}")

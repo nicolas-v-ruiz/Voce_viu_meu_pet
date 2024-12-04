@@ -1,9 +1,11 @@
 from pathlib import Path
 from PIL import Image
 import re
+
 # Configura o diretório absoluto para uploads
 UPLOADS_DIR = Path("C:/Users/FN84/OneDrive - PETROBRAS/Área de Trabalho/VoceViumeuPet - CRUD/projeto/uploads")
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)  # Garante que o diretório existe
+
 def process_image(image_file, metadata, max_size=(800, 800)):
     """
     Processa e salva a imagem no diretório absoluto 'UPLOADS_DIR'.
