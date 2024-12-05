@@ -9,7 +9,7 @@ categories: Web app
 tags: \["CC", "Pet", "ADS", "Causa animal", "Tecnologia", "Meio ambiente"\] 
 linkweb: https://voceviumeupet.streamlit.app/
 linkblog: https://nicolas-v-ruiz.github.io/Voce_viu_meu_pet/index.html 
-inkvideo: Link do video
+inkvideo: https://drive.google.com/file/d/13FbrRBNXpHGdut2uiEspjcpkF4uU2OAS/view
 
 ---
 
